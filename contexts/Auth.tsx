@@ -8,11 +8,13 @@ import { useRouter } from "next/router";
 type AuthContextType = {
   user: firebase.User | null;
   initializing: boolean;
+  logout: () => void;
 };
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
   initializing: true,
+  logout: () => {},
 });
 
 export const AuthProvider = ({ children }: any) => {
