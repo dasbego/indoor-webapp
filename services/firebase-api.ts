@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-// The firebase base url
+// The firebase base url ( Cloud functions )
 const BASE_URL = 'https://us-central1-indoorv2.cloudfunctions.net/indoorapi/';
 
 const instance = axios.create({

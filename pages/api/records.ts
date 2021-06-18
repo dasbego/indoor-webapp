@@ -1,6 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { getAllRecords } from '../../services/firebase-api'
+import initMiddleware from "../../middleware/init-middleware";
 
 type Data = {
   records?: string
