@@ -12,7 +12,7 @@ export default function AuthGuard({ children }: { children: JSX.Element }) {
       // redirect
       router.push("/login");
     }
-  }, [user]);
+  }, [initializing, user]);
 
   // if auth initialized with a valid user show protected page
   if (user) {

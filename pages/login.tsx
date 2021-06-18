@@ -37,8 +37,6 @@ const Login = () => {
         .auth()
         .createUserWithEmailAndPassword(email || "", pwd || "")
         .then((e) => {
-          console.log(e)
-          debugger;
           window.location.href = "/";
         })
         .catch((error) => {

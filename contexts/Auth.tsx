@@ -3,6 +3,7 @@ import nookies from "nookies";
 import firebaseClient from "../firebase/client";
 import firebase from "firebase/app";
 import "firebase/auth";
+import { useRouter } from "next/router";
 
 type AuthContextType = {
   user: firebase.User | null;
@@ -18,8 +19,10 @@ export const AuthProvider = ({ children }: any) => {
   firebaseClient();
   const [user, setUser] = useState<firebase.User | null>(null);
   const [initializing, setInitializing] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
+    initializeUser();
     return firebase.auth().onIdTokenChanged(async (user) => {
       if (!user) {
         setUser(null);
@@ -34,20 +37,28 @@ export const AuthProvider = ({ children }: any) => {
     });
   }, []);
 
+  async function logout () {
+    await firebase.auth().signOut();
+    setUser(null);
+    nookies.set(undefined, "token", "", { path: "/" });
+    router.push("/login");
+  }
+
+  async function initializeUser () {
+    const user = firebase.auth().currentUser;
+    if (user) await user.getIdToken(true);
+  }
+
   // force refresh the token every 10 minutes
   useEffect(() => {
-    const handle = setInterval(async () => {
-      const user = firebase.auth().currentUser;
-      if (user) await user.getIdToken(true);
-      setInitializing(false);
-    }, 10 * 60 * 1000);
+    const handle = setInterval(initializeUser, 10 * 60 * 1000);
 
     // clean up setInterval
     return () => clearInterval(handle);
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, initializing }}>
+    <AuthContext.Provider value={{ user, initializing, logout }}>
       {children}
     </AuthContext.Provider>
   );
