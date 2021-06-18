@@ -4,7 +4,7 @@ import firebase from "firebase/app";
 import "firebase/auth";
 import { LockClosedIcon } from '@heroicons/react/solid';
 import Alert from '../components/Alert';
-import { useAuth } from "../auth";
+import { useAuth } from "../contexts/Auth";
 import { useRouter } from 'next/router';
 
 const Login = () => {

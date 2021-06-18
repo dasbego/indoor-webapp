@@ -11,13 +11,7 @@ export type Record = {
   timestamp: string;
 };
 
-export default function Records(props: any) {
-  const [_records, setRecords] = useState<Record[]>([]);
-  useEffect(() => {
-    getAllRecords().then((records) => {
-      setRecords(Object.values(records));
-    });
-  }, []);
+function Records({ records }: any) {
   return (
     <div className="flex flex-col">
       <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -53,7 +47,7 @@ export default function Records(props: any) {
                 </tr>
               </thead>
               <tbody className="bg-white divide-gray-200 divide-y">
-                {_records.map((record, idx) => (
+                {records.map((record, idx) => (
                   <tr key={`record-${idx}`}>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
@@ -94,3 +88,10 @@ export default function Records(props: any) {
     </div>
   );
 }
+
+Records.getInitialProps = async (ctx) => {
+  const records = await getAllRecords();
+  return { records: Object.values(records) };
+};
+
+export default Records;
