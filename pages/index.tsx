@@ -1,11 +1,8 @@
 import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
-import { useAuth } from "../auth";
 
 export default function Home() {
-  const { user } = useAuth();
-  console.log(user);
   return (
     <div className={styles.container}>
       <Head>

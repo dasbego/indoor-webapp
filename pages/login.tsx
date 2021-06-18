@@ -2,12 +2,51 @@ import React, { useState } from "react";
 import firebaseClient from "../firebase/client";
 import firebase from "firebase/app";
 import "firebase/auth";
-import { LockClosedIcon } from '@heroicons/react/solid'
+import { LockClosedIcon } from '@heroicons/react/solid';
+import Alert from '../components/Alert';
+import { useAuth } from "../auth";
+import { useRouter } from 'next/router';
 
 const Login = () => {
   firebaseClient();
-  const [username, setUsername] = useState<string | null>(null);
+  const { user } = useAuth();
+  const router = useRouter();
+  const [email, setEmail] = useState<string | null>(null);
   const [pwd, setPwd] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    loginUser(event);
+  }
+
+  const loginUser = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    await firebase.auth().signInWithEmailAndPassword(email || '', pwd || '')
+    .then((response) => {
+      router.push('/records');
+    }).catch(err => {
+      setError(err.message);
+    });
+  }
+
+  const registerUser = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (email && pwd) {
+      await firebase
+        .auth()
+        .createUserWithEmailAndPassword(email || "", pwd || "")
+        .then((e) => {
+          console.log(e)
+          debugger;
+          window.location.href = "/";
+        })
+        .catch((error) => {
+          const message = error.message;
+          console.log(message);
+        });
+    }
+  }
 
   return (
     <div className="flex items-center justify-center px-4 py-12 min-h-screen bg-gray-50 sm:px-6 lg:px-8">
@@ -22,7 +61,7 @@ const Login = () => {
             Bienvenido a Indoor v1
           </h2>
         </div>
-        <form className="mt-8 space-y-6" action="#">
+        <form className="mt-8 space-y-6" onSubmit={(e) => onSubmit(e)}>
           <input type="hidden" name="remember" value="true" />
           <div className="rounded-md shadow-sm -space-y-px">
             <div>
@@ -30,14 +69,14 @@ const Login = () => {
                 Usuario
               </label>
               <input
-                id="username"
-                name="username"
-                type="text"
+                id="email"
+                name="email"
+                type="email"
                 required
                 className="placeholder-gray-500 focus:ring-skyblue-500 relative focus:z-10 block px-3 py-2 w-full text-gray-900 border border-gray-300 focus:border-indigo-500 rounded-none rounded-t-md focus:outline-none appearance-none sm:text-sm"
                 placeholder="Usuario"
                 onChange={(e: React.FormEvent<HTMLInputElement>) =>
-                  setUsername(e.currentTarget.value)
+                  setEmail(e.currentTarget.value)
                 }
               />
             </div>
@@ -60,6 +99,8 @@ const Login = () => {
             </div>
           </div>
 
+          { error && <Alert variant="error" items={[error]} />
+          }
           <div className="flex items-center justify-between">
             <div className="flex items-center">
               <input
@@ -87,20 +128,6 @@ const Login = () => {
             <button
               type="submit"
               className="group relative flex justify-center px-4 py-2 w-full text-white text-sm font-medium bg-blue-600 hover:bg-blue-700 border border-transparent rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-              onClick={async () => {
-                if (username && pwd) {
-                  await firebase
-                    .auth()
-                    .createUserWithEmailAndPassword(username || "", pwd || "")
-                    .then(() => {
-                      window.location.href = "/";
-                    })
-                    .catch((error) => {
-                      const message = error.message;
-                      console.log(message);
-                    });
-                }
-              }}
             >
               <span className="absolute left-0 inset-y-0 flex items-center pl-3">
                 <LockClosedIcon className="h-5 w-5 text-white-500 group-hover:text-white-400" aria-hidden="true" />
