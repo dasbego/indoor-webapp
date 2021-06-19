@@ -6,29 +6,35 @@ import { LockClosedIcon } from '@heroicons/react/solid';
 import Alert from '../components/Alert';
 import { useAuth } from "../contexts/Auth";
 import { useRouter } from 'next/router';
+import { useEffect } from "react";
 
-const Login = () => {
+const Login = (props) => {
   firebaseClient();
-  const { user } = useAuth();
+  const { user, initializing } = useAuth();
   const router = useRouter();
   const [email, setEmail] = useState<string | null>(null);
   const [pwd, setPwd] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  if (initializing) return null;
+
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     loginUser(event);
-  }
+  };
 
   const loginUser = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    await firebase.auth().signInWithEmailAndPassword(email || '', pwd || '')
-    .then((response) => {
-      router.push('/records');
-    }).catch(err => {
-      setError(err.message);
-    });
-  }
+    await firebase
+      .auth()
+      .signInWithEmailAndPassword(email || "", pwd || "")
+      .then((response) => {
+        router.push("/records");
+      })
+      .catch((err) => {
+        setError(err.message);
+      });
+  };
 
   const registerUser = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -44,7 +50,7 @@ const Login = () => {
           console.log(message);
         });
     }
-  }
+  };
 
   return (
     <div className="flex items-center justify-center px-4 py-12 min-h-screen bg-gray-50 sm:px-6 lg:px-8">
@@ -97,8 +103,7 @@ const Login = () => {
             </div>
           </div>
 
-          { error && <Alert variant="error" items={[error]} />
-          }
+          {error && <Alert variant="error" items={[error]} />}
           <div className="flex items-center justify-between">
             <div className="flex items-center">
               <input
@@ -127,8 +132,11 @@ const Login = () => {
               type="submit"
               className="group relative flex justify-center px-4 py-2 w-full text-white text-sm font-medium bg-blue-600 hover:bg-blue-700 border border-transparent rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
             >
-              <span className="absolute left-0 inset-y-0 flex items-center pl-3">
-                <LockClosedIcon className="h-5 w-5 text-white-500 group-hover:text-white-400" aria-hidden="true" />
+              <span className="absolute inset-y-0 left-0 flex items-center pl-3">
+                <LockClosedIcon
+                  className="text-white-500 group-hover:text-white-400 w-5 h-5"
+                  aria-hidden="true"
+                />
               </span>
               Entrar
             </button>

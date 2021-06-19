@@ -9,7 +9,6 @@ export default function AuthGuard({ children }: { children: JSX.Element }) {
 
   useEffect(() => {
     if (!initializing && !user) {
-      // redirect
       router.push("/login");
     }
   }, [initializing, user]);

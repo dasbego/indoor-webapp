@@ -25,39 +25,48 @@ export const AuthProvider = ({ children }: any) => {
 
   useEffect(() => {
     initializeUser();
-    return firebase.auth().onIdTokenChanged(async (user) => {
-      if (!user) {
-        setUser(null);
-        nookies.set(undefined, "token", "", { path: "/" });
-        return;
-      }
-      const token = await user.getIdToken();
-      setUser(user);
-      nookies.set(undefined, "token", token, { path: "/" });
+    return firebase.auth().onIdTokenChanged(
+      async (user) => {
+        if (!user) {
+          setUser(null);
+          nookies.set(undefined, "token", "", { path: "/" });
+          setInitializing(false);
+          return;
+        }
+        const token = await user.getIdToken();
+        setUser(user);
+        nookies.set(undefined, "token", token, { path: "/" });
 
-      setInitializing(false);
-    });
+        setInitializing(false);
+      },
+        (err) => {
+          setInitializing(false);
+        }
+    );
   }, []);
 
-  async function logout () {
+  // force refresh the token every 10 minutes
+  useEffect(() => {
+    const handle = setInterval(() => {
+      initializeUser();
+      setInitializing(false);
+    }, 10 * 60 * 1000);
+
+    // clean up setInterval
+    return () => clearInterval(handle);
+  }, []);
+
+  async function logout() {
     await firebase.auth().signOut();
     setUser(null);
     nookies.set(undefined, "token", "", { path: "/" });
     router.push("/login");
   }
 
-  async function initializeUser () {
+  async function initializeUser() {
     const user = firebase.auth().currentUser;
     if (user) await user.getIdToken(true);
   }
-
-  // force refresh the token every 10 minutes
-  useEffect(() => {
-    const handle = setInterval(initializeUser, 10 * 60 * 1000);
-
-    // clean up setInterval
-    return () => clearInterval(handle);
-  }, []);
 
   return (
     <AuthContext.Provider value={{ user, initializing, logout }}>

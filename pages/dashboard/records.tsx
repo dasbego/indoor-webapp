@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { getAllRecords } from "../services/firebase-api";
-import Table from "../components/Table";
-import Header from "../components/Header";
+import { getAllRecords } from "../../services/firebase-api";
+import Table from "../../components/Table";
+import DashboardLayout from "../../components/dashboard/Layout";
 
 export type Record = {
   name: string;
@@ -15,10 +15,9 @@ export type Record = {
 
 function Records({ records }: any) {
   return (
-    <div className="">
-      <Header />
+    <DashboardLayout>
       <Table items={records} />
-    </div>
+    </DashboardLayout>
   );
 }
 
