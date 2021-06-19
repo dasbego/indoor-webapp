@@ -11,15 +11,9 @@ type MyAppProps = AppProps & { Component: MyComponentType };
 function MyApp({ Component, pageProps }: MyAppProps) {
   return (
     <AuthProvider>
-      {Component.requireAuth ? (
-          <AuthGuard>
-            <Component {...pageProps} />
-          </AuthGuard>
-      ) : (
-    (
-            <Component {...pageProps} />
- 
-      )    )}
+      <AuthGuard requireAuth={Component.requireAuth}>
+        <Component {...pageProps} />
+      </AuthGuard>
     </AuthProvider>
   );
 }

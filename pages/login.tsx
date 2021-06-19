@@ -29,7 +29,7 @@ const Login = (props) => {
       .auth()
       .signInWithEmailAndPassword(email || "", pwd || "")
       .then((response) => {
-        router.push("/records");
+        router.push("/dashboard/records");
       })
       .catch((err) => {
         setError(err.message);
