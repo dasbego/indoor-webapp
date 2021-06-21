@@ -2,14 +2,54 @@ import React, { useState } from "react";
 import firebaseClient from "../firebase/client";
 import firebase from "firebase/app";
 import "firebase/auth";
-import { LockClosedIcon } from '@heroicons/react/solid';
-import Alert from '../components/Alert';
+import { LockClosedIcon } from "@heroicons/react/solid";
+import Alert from "../components/Alert";
 import { useAuth } from "../contexts/Auth";
-import { useRouter } from 'next/router';
-import { useEffect } from "react";
+import { useRouter } from "next/router";
+import {
+  TextField,
+  Button,
+  Card,
+  Container,
+  CardContent,
+} from "@material-ui/core";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Checkbox from "@material-ui/core/Checkbox";
+import { makeStyles } from "@material-ui/core/styles";
 
-const Login = (props) => {
+const useStyles = makeStyles((theme) => ({
+  paper: {
+    marginTop: theme.spacing(8),
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+  },
+  avatar: {
+    margin: theme.spacing(1),
+    backgroundColor: theme.palette.secondary.main,
+  },
+  form: {
+    width: "100%", // Fix IE 11 issue.
+    marginTop: theme.spacing(1),
+  },
+  submit: {
+    margin: theme.spacing(3, 0, 2),
+  },
+  cardContent: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+  },
+  textField: {
+    marginBottom: "1rem",
+  },
+}));
+
+type LoginProps = {};
+
+const Login = (props: LoginProps) => {
   firebaseClient();
+  const classes = useStyles();
   const { user, initializing } = useAuth();
   const router = useRouter();
   const [email, setEmail] = useState<string | null>(null);
@@ -53,97 +93,78 @@ const Login = (props) => {
   };
 
   return (
-    <div className="flex items-center justify-center px-4 py-12 min-h-screen bg-gray-50 sm:px-6 lg:px-8">
-      <div className="w-full max-w-md space-y-8">
-        <div>
+    <Container component="main" maxWidth="xs">
+      <Card>
+        <CardContent className={classes.cardContent}>
           <img
             className="mx-auto w-auto h-12"
-            src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
+            src="https://image.freepik.com/vector-gratis/cannabis-vintage-weed-logo_228886-336.jpg"
             alt="Workflow"
+            width="250px"
           />
           <h2 className="mt-6 text-center text-gray-900 text-3xl font-extrabold">
             Bienvenido a Indoor v1
           </h2>
-        </div>
-        <form className="mt-8 space-y-6" onSubmit={(e) => onSubmit(e)}>
-          <input type="hidden" name="remember" value="true" />
-          <div className="rounded-md shadow-sm -space-y-px">
-            <div>
-              <label htmlFor="email-address" className="sr-only">
-                Usuario
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                required
-                className="placeholder-gray-500 focus:ring-skyblue-500 relative focus:z-10 block px-3 py-2 w-full text-gray-900 border border-gray-300 focus:border-indigo-500 rounded-none rounded-t-md focus:outline-none appearance-none sm:text-sm"
-                placeholder="Usuario"
-                onChange={(e: React.FormEvent<HTMLInputElement>) =>
-                  setEmail(e.currentTarget.value)
-                }
-              />
-            </div>
-            <div>
-              <label htmlFor="password" className="sr-only">
-                Contraseña
-              </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                autoComplete="current-password"
-                required
-                className="placeholder-gray-500 focus:ring-skyblue-500 focus:border-skyblue-500 relative focus:z-10 block px-3 py-2 w-full text-gray-900 border border-gray-300 rounded-b-md rounded-none focus:outline-none appearance-none sm:text-sm"
-                placeholder="Contraseña"
-                onChange={(e: React.FormEvent<HTMLInputElement>) =>
-                  setPwd(e.currentTarget.value)
-                }
-              />
-            </div>
-          </div>
-
-          {error && <Alert variant="error" items={[error]} />}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <input
-                id="remember_me"
-                name="remember_me"
-                type="checkbox"
-                className="text-skyblue-600 focus:ring-skyblue-500 w-4 h-4 border-gray-300 rounded"
-              />
-              <label
-                htmlFor="remember_me"
-                className="block ml-2 text-gray-900 text-sm"
-              >
-                Recuerdame
-              </label>
+          <form className={classes.form} onSubmit={(e) => onSubmit(e)}>
+            <input type="hidden" name="remember" value="true" />
+            <div className="rounded-md shadow-sm -space-y-px">
+              <div>
+                <TextField
+                  id="email"
+                  name="email"
+                  type="email"
+                  required
+                  placeholder="Usuario"
+                  variant="outlined"
+                  onChange={(e: any) => setEmail(e.currentTarget.value)}
+                  autoComplete="email"
+                  autoFocus
+                  fullWidth
+                  className={classes.textField}
+                />
+              </div>
+              <div>
+                <TextField
+                  id="password"
+                  name="password"
+                  type="password"
+                  autoComplete="current-password"
+                  required
+                  placeholder="Contraseña"
+                  variant="outlined"
+                  onChange={(e: any) => setPwd(e.currentTarget.value)}
+                  fullWidth
+                  className={classes.textField}
+                />
+              </div>
             </div>
 
-            {/*<div className="text-sm">
+            {error && <Alert variant="error" items={[error]} />}
+            <div className="flex items-center justify-between">
+              <FormControlLabel
+                control={<Checkbox value="remember" color="primary" />}
+                label="Remember me"
+              />
+
+              {/*<div className="text-sm">
               <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">
                 Olvidaste tu contraseña
               </a>
               </div>*/}
-          </div>
-
-          <div>
-            <button
+            </div>
+            <Button
               type="submit"
-              className="group relative flex justify-center px-4 py-2 w-full text-white text-sm font-medium bg-blue-600 hover:bg-blue-700 border border-transparent rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+              variant="contained"
+              color="primary"
+              fullWidth
+              size="large"
             >
-              <span className="absolute inset-y-0 left-0 flex items-center pl-3">
-                <LockClosedIcon
-                  className="text-white-500 group-hover:text-white-400 w-5 h-5"
-                  aria-hidden="true"
-                />
-              </span>
               Entrar
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
+    </Container>
   );
 };
 
