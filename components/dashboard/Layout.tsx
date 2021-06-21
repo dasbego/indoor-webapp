@@ -1,5 +1,5 @@
 import * as React from "react";
-import Header from "../../components/Header";
+import Header from "./Header";
 import Container from "../../components/Container";
 import Drawer from "../../components/dashboard/Drawer";
 import clsx from "clsx";

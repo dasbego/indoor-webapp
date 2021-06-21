@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { getAllRecords } from "../../services/firebase-api";
-import Table from "../../components/Table";
+import Table from "../../components/RecordsTable";
 import DashboardLayout from "../../components/dashboard/Layout";
 
 export type Record = {
