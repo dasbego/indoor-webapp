@@ -2,7 +2,7 @@ import * as React from "react";
 import Drawer from "@material-ui/core/Drawer";
 import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
-import { mainListItems, secondaryListItems } from "./ListItems";
+import { MainListItems, SecondaryListItems } from "./ListItems";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import IconButton from "@material-ui/core/IconButton";
 import Divider from "@material-ui/core/Divider";
@@ -64,9 +64,9 @@ export default function DashboardDrawer({
         </IconButton>
       </div>
       <Divider />
-      <List>{mainListItems}</List>
+      <List>{MainListItems}</List>
       <Divider />
-      <List>{secondaryListItems}</List>
+      <List>{SecondaryListItems}</List>
     </Drawer>
   );
 }

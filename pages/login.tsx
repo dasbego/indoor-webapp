@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import firebaseClient from "../firebase/client";
 import firebase from "firebase/app";
 import "firebase/auth";
-import { LockClosedIcon } from "@heroicons/react/solid";
 import Alert from "../components/Alert";
 import { useAuth } from "../contexts/Auth";
 import { useRouter } from "next/router";
@@ -18,6 +17,9 @@ import Checkbox from "@material-ui/core/Checkbox";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
+  container: {
+    marginTop: "5rem",
+  },
   paper: {
     marginTop: theme.spacing(8),
     display: "flex",
@@ -93,7 +95,7 @@ const Login = (props: LoginProps) => {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main" maxWidth="xs" className={classes.container}>
       <Card>
         <CardContent className={classes.cardContent}>
           <img
@@ -143,7 +145,7 @@ const Login = (props: LoginProps) => {
             <div className="flex items-center justify-between">
               <FormControlLabel
                 control={<Checkbox value="remember" color="primary" />}
-                label="Remember me"
+                label="Recuérdame"
               />
 
               {/*<div className="text-sm">

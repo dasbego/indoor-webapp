@@ -4,26 +4,21 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListSubheader from "@material-ui/core/ListSubheader";
 import DashboardIcon from "@material-ui/icons/Dashboard";
-import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
-import PeopleIcon from "@material-ui/icons/People";
-import BarChartIcon from "@material-ui/icons/BarChart";
-import LayersIcon from "@material-ui/icons/Layers";
+import Settings from "@material-ui/icons/Settings";
 import AssignmentIcon from "@material-ui/icons/Assignment";
+import Link from "next/link";
 
-export const mainListItems = (
+export const MainListItems = (
   <div>
-    <ListItem button>
-      <ListItemIcon>
-        <DashboardIcon />
-      </ListItemIcon>
-      <ListItemText primary="Dashboard" />
-    </ListItem>
-    {/*<ListItem button>
-      <ListItemIcon>
-        <ShoppingCartIcon />
-      </ListItemIcon>
-      <ListItemText primary="Orders" />
-    </ListItem>
+    <Link href="/dashboard/settings">
+      <ListItem button>
+        <ListItemIcon>
+          <Settings />
+        </ListItemIcon>
+        <ListItemText primary="Configuración" />
+      </ListItem>
+    </Link>
+    {/*
     <ListItem button>
       <ListItemIcon>
         <PeopleIcon />
@@ -45,8 +40,16 @@ export const mainListItems = (
   </div>
 );
 
-export const secondaryListItems = (
+export const SecondaryListItems = (
   <div>
+    <Link href="/dashboard/records">
+      <ListItem button>
+        <ListItemIcon>
+          <DashboardIcon />
+        </ListItemIcon>
+        <ListItemText primary="Registros" />
+      </ListItem>
+    </Link>
     <ListSubheader inset>Reportes</ListSubheader>
     <ListItem button>
       <ListItemIcon>

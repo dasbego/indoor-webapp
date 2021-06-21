@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { getAllRecords } from "../../services/firebase-api";
 import Table from "../../components/RecordsTable";
 import DashboardLayout from "../../components/dashboard/Layout";
