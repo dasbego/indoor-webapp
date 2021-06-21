@@ -3,52 +3,113 @@ import React from "react";
 import Link from "next/link";
 import { useAuth } from "../contexts/Auth";
 
-export default function Header() {
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import Button from "@material-ui/core/Button";
+import clsx from "clsx";
+import { makeStyles } from "@material-ui/core/styles";
+import IconButton from "@material-ui/core/IconButton";
+import MenuIcon from "@material-ui/icons/Menu";
+import { drawerWidth } from "../components/dashboard/Drawer";
+
+const useStyles = makeStyles((theme) => ({
+  appBar: {
+    zIndex: theme.zIndex.drawer + 1,
+    transition: theme.transitions.create(["width", "margin"], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+  },
+  appBarShift: {
+    marginLeft: drawerWidth,
+    width: `calc(100% - ${drawerWidth}px)`,
+    transition: theme.transitions.create(["width", "margin"], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+  },
+  toolbar: {
+    paddingRight: 24, // keep right padding when drawer closed
+  },
+  paper: {
+    padding: theme.spacing(2),
+    display: "flex",
+    overflow: "auto",
+    flexDirection: "column",
+  },
+  fixedHeight: {
+    height: 240,
+  },
+  menuButton: {
+    marginRight: 36,
+  },
+  menuButtonHidden: {
+    display: "none",
+  },
+}));
+
+type HeaderProps = {
+  isDrawerOpen: boolean;
+  handleDrawerOpen: () => void;
+};
+
+export default function Header({
+  isDrawerOpen,
+  handleDrawerOpen,
+}: HeaderProps) {
+  const classes = useStyles();
   const { user, logout } = useAuth();
+  const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
   return (
-    <div className="relative bg-white">
-      <div className="mx-auto px-4 max-w-7xl sm:px-6">
-        <div className="flex items-center justify-between py-6 border-b-2 border-gray-100 md:justify-start md:space-x-10">
-          <div className="flex justify-start lg:flex-1 lg:w-0">
-            <Link href="/login">
-              <img
-                className="w-auto h-8 sm:h-10"
-                src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
-                alt=""
-              />
-            </Link>
-          </div>
-          <div className="hidden items-center justify-end md:flex md:flex-1 lg:w-0">
-            {!user && (
-              <>
-                <Link href="/login">
-                  <a className="text-gray-500 hover:text-gray-900 whitespace-nowrap text-base font-medium">
-                    Log in
-                  </a>
-                </Link>
-                <Link href="/signup">
-                  <a className="inline-flex items-center justify-center ml-8 px-4 py-2 text-white whitespace-nowrap text-base font-medium bg-indigo-500 hover:bg-indigo-700 border border-transparent rounded-md shadow-sm">
-                    Sign up
-                  </a>
-                </Link>
-              </>
+    <AppBar
+      position="absolute"
+      className={clsx(classes.appBar, isDrawerOpen && classes.appBarShift)}
+    >
+      <Toolbar className={classes.toolbar}>
+        <div className="flex justify-start lg:flex-1 lg:w-0">
+          <IconButton
+            edge="start"
+            color="inherit"
+            aria-label="open drawer"
+            onClick={handleDrawerOpen}
+            className={clsx(
+              classes.menuButton,
+              isDrawerOpen && classes.menuButtonHidden
             )}
-            {user && (
-              <>
-                <span className="text-gray-500 hover:text-gray-900 whitespace-nowrap text-base font-medium">
-                  Bienvenido <b>{user.email}</b>
-                </span>
-                <button
-                  onClick={() => logout()}
-                  className="inline-flex items-center justify-center ml-8 px-4 py-2 text-white whitespace-nowrap text-base font-medium bg-indigo-500 hover:bg-indigo-700 border border-transparent rounded-md shadow-sm"
-                >
-                  Log out
-                </button>
-              </>
-            )}
-          </div>
+          >
+            <MenuIcon />
+          </IconButton>
         </div>
-      </div>
-    </div>
+        <div className="hidden items-center justify-end md:flex md:flex-1 lg:w-0">
+          {!user && (
+            <>
+              <Link href="/login">
+                <a className="text-gray-500 hover:text-gray-900 whitespace-nowrap text-base font-medium">
+                  Log in
+                </a>
+              </Link>
+              <Link href="/signup">
+                <a className="inline-flex items-center justify-center ml-8 px-4 py-2 text-white whitespace-nowrap text-base font-medium bg-indigo-500 hover:bg-indigo-700 border border-transparent rounded-md shadow-sm">
+                  Sign up
+                </a>
+              </Link>
+            </>
+          )}
+          {user && (
+            <>
+              <span className="text-gray-500 hover:text-gray-900 whitespace-nowrap text-base font-medium">
+                Bienvenido <b>{user.email}</b>
+              </span>
+              <Button
+                onClick={() => logout()}
+                className="inline-flex items-center justify-center ml-8 px-4 py-2 text-white whitespace-nowrap text-base font-medium bg-indigo-500 hover:bg-indigo-700 border border-transparent rounded-md shadow-sm"
+              >
+                Log out
+              </Button>
+            </>
+          )}
+        </div>
+      </Toolbar>
+    </AppBar>
   );
 }
