@@ -1,22 +1,12 @@
 import React from "react";
 import { getAllRecords } from "../../services/firebase-api";
-import Table from "../../components/RecordsTable";
+import Table, { RecordsProps } from "../../components/RecordsTable";
 import DashboardLayout from "../../components/dashboard/Layout";
 
-export type Record = {
-  name: string;
-  humidity?: {
-    raw: number;
-    percentage: number;
-  };
-  temperature?: number;
-  timestamp: string;
-};
-
-function Records({ records }: any) {
-  const sortedRecords = records.sort((r1, r2) => {
-    const t1 = new Date(r1.timestamp);
-    const t2 = new Date(r2.timestamp);
+function Records({ items }: RecordsProps) {
+  const sortedRecords = items.sort((r1, r2) => {
+    const t1 = new Date(r1.timestamp).getTime();
+    const t2 = new Date(r2.timestamp).getTime();
     return t2 - t1;
   });
   return (
@@ -26,9 +16,9 @@ function Records({ records }: any) {
   );
 }
 
-Records.getInitialProps = async (ctx) => {
+Records.getInitialProps = async (ctx: any) => {
   const records = await getAllRecords();
-  return { records: Object.values(records) };
+  return { items: Object.values(records) };
 };
 
 Records.requireAuth = true;

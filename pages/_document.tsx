@@ -23,7 +23,7 @@ function MyDocument() {
   );
 }
 
-MyDocument.getInitialProps = async (ctx) => {
+MyDocument.getInitialProps = async (ctx: any) => {
   const initialProps = await Document.getInitialProps(ctx);
   return { ...initialProps };
 };

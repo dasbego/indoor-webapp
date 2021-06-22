@@ -8,6 +8,20 @@ import {
   GridCellParams,
 } from "@material-ui/data-grid";
 
+export type RecordProps = {
+  name: string;
+  humidity?: {
+    raw: number;
+    percentage: number;
+  };
+  temperature?: number;
+  timestamp: string;
+};
+
+export type RecordsProps = {
+  items: RecordProps[];
+};
+
 const columns: GridColDef[] = [
   {
     field: "name",
@@ -47,13 +61,17 @@ const columns: GridColDef[] = [
     headerName: "Humedad",
     width: 150,
     editable: false,
-    valueGetter: (params: GridValueGetterParams) =>
-      `${params.value.percentage.toFixed(0)}%`,
+    valueGetter: (params: GridValueGetterParams) => {
+      const humidity = (params.value as { percentage: number }) || {
+        percentage: 0,
+      };
+      return `${humidity ? humidity?.percentage?.toFixed(0) : 0}%`;
+    },
   },
 ];
 
-export default function RecordsTable({ items }: any) {
-  const data = items.map((item, index) => ({
+export default function RecordsTable({ items }: RecordsProps) {
+  const data = items.map((item: RecordProps, index: number) => ({
     id: `record-row-${index}`,
     ...item,
   }));
@@ -62,32 +80,5 @@ export default function RecordsTable({ items }: any) {
     <div style={{ height: 650, width: "100%" }}>
       <DataGrid columns={columns} rows={data} pageSize={10} />
     </div>
-    /*<Table>
-      <TableHead className="bg-gray-50">
-        <TableRow>
-          <TableCell>Nombre</TableCell>
-          <TableCell>Fecha</TableCell>
-          <TableCell>Temperatura</TableCell>
-          <TableCell>Humedad</TableCell>
-        </TableRow>
-      </TableHead>
-      <TableBody className="bg-white divide-gray-200 divide-y">
-        {items.map((record, idx) => (
-          <TableRow key={`record-${idx}`}>
-            <TableCell style={{ display: "flex" }}>
-              <Avatar
-                className="w-10 h-10 rounded-full"
-                src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60"
-                alt=""
-              />
-              <div>{record.name}</div>
-            </TableCell>
-            <TableCell>{record.timestamp}</TableCell>
-            <TableCell>{record.temperature || 0}°</TableCell>
-            <TableCell>{record.humidity.percentage.toFixed(0) || 0}%</TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>*/
   );
 }
